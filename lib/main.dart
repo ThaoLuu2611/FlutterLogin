@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'home.dart';
 
 void main() => runApp(MyApp());
 
@@ -29,6 +30,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool _showPass = false;
+  bool _showUserError = false;
+
+  bool _showPassError = false;
+  TextEditingController _userController = TextEditingController();
+  TextEditingController _passController = TextEditingController();
   @override
   Widget build(BuildContext context) {
 
@@ -61,8 +67,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               SizedBox(height: 30),
               TextField(
+                controller: _userController,
                 decoration: InputDecoration(
                     labelText: 'User name',
+                    errorText: _showUserError ? 'Not validate user name' : null,
                     labelStyle: TextStyle(
                       color: Colors.grey,
                       fontSize: 15,
@@ -73,9 +81,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 alignment: AlignmentDirectional.centerEnd,
                 children: <Widget>[
                   TextField(
+                    controller: _passController,
                     obscureText: _showPass,
                     decoration: InputDecoration(
                         labelText: 'PASSWORD',
+                        errorText: _showPassError ? 'Not valid password' : null,
                         labelStyle: TextStyle(
                           fontSize: 15,
                         )),
@@ -115,7 +125,25 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void onLogin(){
+      setState(() {
+        if(_userController.text.length <6 || _userController.text.length > 20)
+          _showUserError = true;
+        else
+          _showUserError = false;
 
+        if(_passController.text.length < 6)
+          _showPassError = true;
+        else
+          _showPassError = false;
+
+        if(!_showPassError && !_showPassError){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+        }
+      });
+
+      Widget goHomme(BuildContext context){
+        return Home();
+      }
   }
 
   void onShowClicked(){
